@@ -1,0 +1,24 @@
+{
+  "name": "al-cart",
+  "version": "0.1.0",
+  "description": "Al cart",
+  "keywords": [
+    "alaska",
+    "labrador"
+  ],
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maichong/al-cart.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maichong/al-cart/issues"
+  },
+  "homepage": "https://github.com/maichong/al-cart#readme",
+  "author": {
+    "email": "li@maichong.it",
+    "name": "li",
+    "url": "https://github.com/maichonglyd"
+  }
+}
