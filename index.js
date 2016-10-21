@@ -15,13 +15,12 @@ export default class Cart extends wx.Component {
     list: array,
     onItemTap: func,
     onItemDelete: func,
-    onSelectList: func,
+    onSelectJoin: func,
     onItemQuantitySet: func,
     onOrderCreateTap: func
   };
 
   data = {
-    list: immutable([]),
     selectCount: 0,
     allSelectStatus: true,
     selectPrice: 0
@@ -38,56 +37,28 @@ export default class Cart extends wx.Component {
   };
 
   handleAllSelectTap() {
-
     let list = [];
-    let selectCount = 0;
-    let selectPrice = 0;
-    let selectList = [];
-    let allSelectStatus = !this.data.allSelectStatus;
     this.data.list.forEach((item) => {
       let temp = item.asMutable();
-      if (this.data.allSelectStatus) {
-        temp.checked = false;
-      } else {
-        temp.checked = true;
-        selectCount += 1;
-        selectPrice += temp.price * temp.quantity;
-        selectList.push(temp.id);
-      }
+      temp.checked = !this.data.allSelectStatus;
       list.push(immutable(temp));
     });
-    console.log('selectList-----', selectList);
-    this.props.onSelectList(selectList);
-    this.setData({ list, selectList, selectCount, selectPrice, allSelectStatus });
+    this.setData({ list });
+    this.checkSelect();
   }
 
   handleItemSelect(component, select) {
     let id = this.data.list[component.key].id;
-    console.log('ar-cart handleItemSelect', id, select);
     let list = [];
-    let selectList = [];
-    let selectPrice = 0;
     this.data.list.forEach((item) => {
-      if (item.id === id) {
-        let temp = item.asMutable();
+      let temp = item.asMutable();
+      if (temp.id === id) {
         temp.checked = select;
-        list.push(immutable(temp));
-        if (select) {
-          selectList.push(temp.id);
-          selectPrice += temp.price * temp.quantity;
-        }
-      } else {
-        if (item.checked) {
-          selectList.push(item.id);
-          selectPrice += item.price * item.quantity;
-        }
-        list.push(item);
       }
+      list.push(immutable(temp));
     });
-    console.log('selectList-----', selectList);
-    this.props.onSelectList(selectList);
-    let allSelectStatus = selectList.length === this.data.list.length;
-    this.setData({ list, selectList, selectCount: selectList.length, allSelectStatus, selectPrice });
+    this.setData({ list });
+    this.checkSelect();
   }
 
   handleItemDelete(component) {
@@ -109,45 +80,48 @@ export default class Cart extends wx.Component {
   }
 
   onUpdate(props) {
-    console.log('al cart props.list', props.list);
-    let data = {
-      list: [],
-      selectCount: 0,
-      selectPrice: 0,
-      selectList: [],
-      allSelectStatus: false
-    };
+    let list = [];
     props.list.forEach((item) => {
-      let flag = true;
+      let checked = true;
       this.data.list.forEach((temp) => {
         if (item.id === temp.id) {
-          flag = false;
-          item.checked = temp.checked;
-          data.list.push(immutable(item));
+          checked = temp.checked;
         }
       });
-      if (flag) {
-        item.checked = true;
-        data.list.push(immutable(item));
-      }
+      item.checked = checked;
+      list.push(immutable(item));
     });
-    data.list.forEach((item) => {
-      if (item.checked) {
-        data.selectList.push(item.id);
-        data.selectCount += 1;
-        data.selectPrice += item.price * item.quantity;
-      }
-    });
-    console.log('al cart list----', data.list);
-    props.onSelectList(data.selectList);
-    data.allSelectStatus = data.list.length === data.selectCount;
-    this.setData(data);
+    this.setData({ list });
+    this.checkSelect(props.onSelectJoin);
   }
 
   handleCreateTap() {
-    if (this.data.selectList.length > 0) {
+    if (this.data.selectCount > 0) {
       this.props.onOrderCreateTap();
     }
+  }
+
+  /**
+   * 检查所有选中的 项 总数 总价
+   */
+  checkSelect(callBack) {
+    let select = [];
+    let selectCount = 0;
+    let selectPrice = 0;
+    this.data.list.forEach((item) => {
+      if (item.checked) {
+        select.push(`${item.id}_${item.sku}_${item.quantity}`);
+        selectCount += 1;
+        selectPrice += item.price * item.quantity;
+      }
+    });
+    if (callBack) {
+      callBack(select.join('|'));
+    } else {
+      this.props.onSelectJoin(select.join('|'));
+    }
+    let allSelectStatus = this.data.list.length === selectCount;
+    this.setData({ selectCount, selectPrice, allSelectStatus });
   }
 
   onLoad() {
