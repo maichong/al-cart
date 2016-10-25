@@ -110,7 +110,7 @@ export default class Cart extends wx.Component {
     let selectPrice = 0;
     this.data.list.forEach((item) => {
       if (item.checked) {
-        select.push(`${item.id}_${item.sku}_${item.quantity}`);
+        select.push(`${item.goods}_${item.sku || ''}_${item.quantity}`);
         selectCount += 1;
         selectPrice += item.price * item.quantity;
       }
