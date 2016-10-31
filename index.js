@@ -15,7 +15,6 @@ export default class Cart extends wx.Component {
     list: array,
     onItemTap: func,
     onItemDelete: func,
-    onSelectJoin: func,
     onItemQuantitySet: func,
     onOrderCreateTap: func
   };
@@ -23,7 +22,8 @@ export default class Cart extends wx.Component {
   data = {
     selectCount: 0,
     allSelectStatus: true,
-    selectPrice: 0
+    selectPrice: 0,
+    selectStr: ''
   };
 
   children = {
@@ -63,19 +63,16 @@ export default class Cart extends wx.Component {
 
   handleItemDelete(component) {
     let id = this.data.list[component.key].id;
-    console.log('al-cart----delete-', id);
     this.props.onItemDelete(id);
   }
 
   handleItemQuantitySet(component, quantity) {
     let id = this.data.list[component.key].id;
-    console.log('al - cart handleItemQuantitySet', id);
     this.props.onItemQuantitySet(id, quantity);
   }
 
   handleItemTap(component) {
     let id = this.data.list[component.key].id;
-    console.log('al-cart tap ------id,==', id);
     this.props.onItemTap(id);
   }
 
@@ -92,19 +89,19 @@ export default class Cart extends wx.Component {
       list.push(immutable(item));
     });
     this.setData({ list });
-    this.checkSelect(props.onSelectJoin);
+    this.checkSelect();
   }
 
   handleCreateTap() {
     if (this.data.selectCount > 0) {
-      this.props.onOrderCreateTap();
+      this.props.onOrderCreateTap(this.data.selectStr);
     }
   }
 
   /**
    * 检查所有选中的 项 总数 总价
    */
-  checkSelect(callBack) {
+  checkSelect() {
     let select = [];
     let selectCount = 0;
     let selectPrice = 0;
@@ -115,13 +112,8 @@ export default class Cart extends wx.Component {
         selectPrice += item.price * item.quantity;
       }
     });
-    if (callBack) {
-      callBack(select.join('|'));
-    } else {
-      this.props.onSelectJoin(select.join('|'));
-    }
     let allSelectStatus = this.data.list.length === selectCount;
-    this.setData({ selectCount, selectPrice, allSelectStatus });
+    this.setData({ selectCount, selectPrice, allSelectStatus, selectStr: select.join('|') });
   }
 
   onLoad() {
