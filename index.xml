@@ -1,8 +1,8 @@
 <view>
-  <list key="listItems" name="al-cart-item"/>
-  <view class="cart-bottom-block">
-    <view class="inline-block cart-bottom-left">
-      <view class="inline-block cart-bottom-checkbox" catchtap="handleAllSelectTap">
+  <list key="listItems" name="al-cart/item"/>
+  <view class="cart-bottom-block padding-0 fixed">
+    <view class="inline-block cart-bottom-left relative">
+      <view class="inline-block cart-bottom-checkbox absolute" catchtap="handleAllSelectTap">
         <block wx:if="{{allSelectStatus}}">
           <icon size="20" type="success" color="rgb(189,5,32)"/>
         </block>
@@ -10,17 +10,17 @@
           <icon size="20" type="circle" color="gray"/>
         </block>
       </view>
-      <view class="inline-block cart-bottom-select-count">
+      <view class="inline-block cart-bottom-select-count absolute">
         <text>已选( {{selectCount}} )</text>
       </view>
       <view class="inline-block cart-bottom-select-price">
-        <text class="cart-bottom-select-price-text display-block">￥{{selectPrice}}</text>
+        <text class="cart-bottom-select-price-text block">￥{{selectPrice}}</text>
       </view>
     </view>
     <view
       class="inline-block cart-bottom-btn {{selectCount>0?'cart-true-btn':'cart-false-btn'}}"
       catchtap="handleCreateTap">
-      <input class="cart-bottom-btn-input" disabled="false" value="下单"/>
+      <input class="cart-bottom-btn-input max-width center align-bottom" disabled="false" value="下单"/>
     </view>
   </view>
 </view>

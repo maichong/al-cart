@@ -6,7 +6,7 @@
 
 import wx from 'labrador';
 import immutable from 'seamless-immutable';
-import CartItem from 'al-cart-item';
+import CartItem from './item';
 
 const { array, func } = wx.PropTypes;
 

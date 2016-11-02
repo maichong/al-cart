@@ -1,0 +1,51 @@
+<view class="cart-block" catchtap="handleTap">
+  <view class="cart-item-block cart-split-line">
+    <view class="cart-item-checkbox align-middle" catchtap="handleCheckboxTap">
+      <block wx:if="{{item.checked}}">
+        <icon size="20" type="success" color="rgb(189,5,32)"/>
+      </block>
+      <block wx:else>
+        <icon size="20" type="circle" color="gray"/>
+      </block>
+    </view>
+    <view class="cart-item-image-view align-middle">
+      <image class="cart-item-image" src="{{item.pic}}"/>
+    </view>
+    <view class="cart-item-text align-top">
+      <view>
+        <view class="cart-item-text-title block">
+          <text>{{item.title}}</text>
+        </view>
+      </view>
+      <view class="cart-item-text-desc">
+        <text>{{item.skuDesc}}</text>
+      </view>
+      <view class="cart-item-text-price-quantity">
+        <view class="inline-block">
+          <text>￥{{item.price}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="cart-item-text-quantity-block relative">
+      <view class="cart-item-quantity-block absolute right-0">
+        <input
+          class="inline-block cart-item-text-quantity-view center align-middle cart-item-text-quantity-minus {{item.quantity==1?'cart-item-minus-disabled':''}}"
+          value="-" disabled="false" catchtap="handleMinus"/>
+        <input
+          class="inline-block cart-item-text-quantity-view center align-middle"
+          value="{{item.quantity}}" type="number" catchchange="handleChange"/>
+        <input
+          class="inline-block cart-item-text-quantity-view center align-middle cart-item-text-quantity-plus"
+          value="+" disabled="false" catchtap="handlePlus"/>
+      </view>
+    </view>
+    <view class="relative" catchtap="handleDeleteTap">
+      <icon class="absolute right-0" type="cancel"/>
+    </view>
+  </view>
+</view>
+<modal title="" hidden="{{modalHidden}}" catchconfirm="handleModalConfirm" catchcancel="handleModalCancel">
+<view class="cart-modal-text center">
+  要删除所选商品？
+</view>
+</modal>
